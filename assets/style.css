@@ -1,0 +1,600 @@
+/* ──────────────────────────────────────────────────────
+   Global reset & base
+   ────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f0f2f5;
+  color: #1a202c;
+  font-size: 14px;
+}
+
+/* ──────────────────────────────────────────────────────
+   App container
+   ────────────────────────────────────────────────────── */
+.app-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+}
+
+/* ──────────────────────────────────────────────────────
+   Header
+   ────────────────────────────────────────────────────── */
+.app-header {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  border-bottom: none;
+  color: #fff;
+  padding: 22px 28px;
+  margin: 0 -20px 24px;
+}
+
+.app-header h1 {
+  margin: 0 0 5px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.app-header p {
+  margin: 0;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.92rem;
+}
+
+/* ──────────────────────────────────────────────────────
+   Controls bar
+   ────────────────────────────────────────────────────── */
+.controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.control-label {
+  font-weight: 600;
+  color: #4a5568;
+  white-space: nowrap;
+}
+
+.dataset-description {
+  color: #718096;
+  font-size: 0.88rem;
+  flex: 1;
+  padding-left: 4px;
+}
+
+/* ──────────────────────────────────────────────────────
+   Dash Dropdown overrides (light)
+   ────────────────────────────────────────────────────── */
+.Select-control {
+  background-color: #fff !important;
+  border-color: #cbd5e0 !important;
+  color: #1a202c !important;
+}
+
+.Select-control:hover {
+  border-color: #3b82f6 !important;
+}
+
+.Select-menu-outer {
+  background-color: #fff !important;
+  border-color: #cbd5e0 !important;
+}
+
+.Select-option {
+  background-color: #fff !important;
+  color: #1a202c !important;
+}
+
+.Select-option:hover, .Select-option.is-focused {
+  background-color: #eff6ff !important;
+  color: #1e40af !important;
+}
+
+.Select-option.is-selected {
+  background-color: #3b82f6 !important;
+  color: #fff !important;
+}
+
+.Select-value-label, .Select-placeholder {
+  color: #1a202c !important;
+}
+
+.Select-placeholder {
+  color: #a0aec0 !important;
+}
+
+.Select-arrow-zone .Select-arrow {
+  border-top-color: #718096 !important;
+}
+
+.Select-clear-zone {
+  color: #718096 !important;
+}
+
+/* ──────────────────────────────────────────────────────
+   Visualization grid  (time series | graph | expert)
+   ────────────────────────────────────────────────────── */
+.viz-container {
+  display: grid;
+  grid-template-columns: 3fr 4fr 3fr;
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .viz-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .viz-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ──────────────────────────────────────────────────────
+   Panels
+   ────────────────────────────────────────────────────── */
+.panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 20px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.panel h3 {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #a0aec0;
+}
+
+.panel-causal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.panel-causal-header h3 {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.threshold-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 280px;
+}
+
+.threshold-control .rc-slider {
+  flex: 1;
+}
+
+/* ──────────────────────────────────────────────────────
+   Cytoscape wrapper
+   ────────────────────────────────────────────────────── */
+.cyto-wrapper {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.controls-divider {
+  width: 1px;
+  height: 36px;
+  background: #e2e8f0;
+  flex-shrink: 0;
+}
+
+.controls-or {
+  font-size: 0.8rem;
+  color: #a0aec0;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ──────────────────────────────────────────────────────
+   Upload area
+   ────────────────────────────────────────────────────── */
+.upload-area {
+  border: 2px dashed #bfdbfe;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  background: #eff6ff;
+  transition: border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.upload-area:hover {
+  border-color: #3b82f6;
+  background: #dbeafe;
+}
+
+.upload-hint {
+  color: #93c5fd;
+  font-size: 0.82rem;
+}
+
+.upload-status {
+  font-size: 0.82rem;
+  margin-top: 4px;
+}
+
+.upload-ok {
+  color: #16a34a;
+}
+
+.upload-error {
+  color: #dc2626;
+}
+
+
+.edge-info {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 5px;
+  font-size: 0.88rem;
+  min-height: 34px;
+  color: #1d4ed8;
+}
+
+/* ──────────────────────────────────────────────────────
+   Confidence threshold slider
+   ────────────────────────────────────────────────────── */
+.graph-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.confidence-slider {
+  flex: 1;
+}
+
+/* ──────────────────────────────────────────────────────
+   Graph edge legend
+   ────────────────────────────────────────────────────── */
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-top: 8px;
+  margin-bottom: 6px;
+  font-size: 0.80rem;
+  color: #718096;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+/* Small coloured line swatch for each edge type */
+.legend-line {
+  display: inline-block;
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.legend-certain {
+  background: #888;
+}
+
+.legend-guaranteed {
+  background: #16a34a;
+  height: 4px;
+}
+
+.legend-structural {
+  background: transparent;
+  border-top: 2.5px dashed #f59e0b;
+  height: 0;
+}
+
+.legend-empirical {
+  background: transparent;
+  border-top: 2px dashed #bbb;
+  height: 0;
+  opacity: 0.7;
+}
+
+/* ──────────────────────────────────────────────────────
+   Expert Knowledge panel
+   ────────────────────────────────────────────────────── */
+.expert-knowledge-panel {
+  /* now a column in the viz grid, no bottom margin needed */
+}
+
+.constraint-form {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.constraint-arrow {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #a0aec0;
+  flex-shrink: 0;
+}
+
+.constraint-type-radio {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.88rem;
+}
+
+.btn-add-constraint {
+  padding: 6px 16px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.btn-add-constraint:hover {
+  background: #2563eb;
+}
+
+/* Constraint chips list */
+.constraints-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 28px;
+}
+
+.constraint-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 4px 10px 4px 12px;
+  font-size: 0.85rem;
+}
+
+.constraint-chip-edge {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.constraint-chip-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.chip-guaranteed {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.chip-forbidden {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.constraint-chip-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  color: #a0aec0;
+  padding: 0 2px;
+  transition: color 0.12s;
+}
+
+.constraint-chip-remove:hover {
+  color: #dc2626;
+}
+  color: #4a5268;
+  padding: 0 2px;
+  transition: color 0.12s;
+}
+
+.constraint-chip-remove:hover {
+  color: #f87171;
+}
+
+/* ──────────────────────────────────────────────────────
+   AI Assistant chat panel
+   ────────────────────────────────────────────────────── */
+.chat-panel {
+  margin-top: 20px;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.chat-mode-badge {
+  font-size: 0.70rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 2px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* Scrollable message list */
+.chat-messages {
+  height: 300px;
+  overflow-y: auto;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  background: #fafafa;
+  margin-bottom: 10px;
+}
+
+/* Individual message row */
+.chat-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.chat-user {
+  flex-direction: row-reverse;
+}
+
+/* Avatar circles */
+.chat-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 0.64rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.chat-avatar-bot {
+  background: #4A90E2;
+  color: white;
+}
+
+.chat-avatar-user {
+  background: #94a3b8;
+  color: white;
+}
+
+/* Bubble */
+.chat-content {
+  max-width: 82%;
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.chat-bot .chat-content {
+  background: #eef2ff;
+  color: #1e1b4b;
+  border-bottom-left-radius: 4px;
+}
+
+.chat-user .chat-content {
+  background: #4A90E2;
+  color: white;
+  border-bottom-right-radius: 4px;
+  margin: 0;
+}
+
+/* Normalise markdown output (paragraphs, lists) inside bot bubble */
+.chat-bot .chat-content p {
+  margin: 0 0 5px;
+}
+.chat-bot .chat-content p:last-child {
+  margin-bottom: 0;
+}
+.chat-bot .chat-content ul,
+.chat-bot .chat-content ol {
+  margin: 4px 0 4px 18px;
+  padding: 0;
+}
+.chat-bot .chat-content li {
+  margin-bottom: 2px;
+}
+
+/* Input row */
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.chat-input:focus {
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+.btn-chat-send {
+  padding: 8px 20px;
+  background: #4A90E2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.btn-chat-send:hover {
+  background: #2C5F8A;
+}
