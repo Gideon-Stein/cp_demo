@@ -176,6 +176,7 @@ def _timeseries_figure(df):
 # ---------------------------------------------------------------------------
 
 app = dash.Dash(__name__, title="Causal Discovery Visualizer")
+server = app.server  # Expose the Flask server for deployment
 
 app.layout = html.Div(
     className="app-container",
@@ -761,4 +762,4 @@ def render_chat(messages):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
