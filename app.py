@@ -152,16 +152,17 @@ def _build_cyto_elements(edges):
     )
 
 
-def _timeseries_figure(df):
+def _timeseries_figure(df, window: int = 12):
+    smoothed_df = df.rolling(window=window, min_periods=1).mean()
     fig = go.Figure()
-    for col in df.columns:
+    for col in smoothed_df.columns:
         fig.add_trace(
-            go.Scatter(y=df[col], name=col, mode="lines", line={"width": 1.5})
+            go.Scatter(y=smoothed_df[col], name=col, mode="lines", line={"width": 2})
         )
     fig.update_layout(
         margin={"l": 40, "r": 10, "t": 20, "b": 40},
         xaxis_title="Time step",
-        yaxis_title="Value",
+        yaxis_title=f"Value ({window}-step moving average)",
         legend={"orientation": "h", "y": -0.22},
         template="plotly_white",
         hovermode="x unified",
@@ -227,18 +228,29 @@ app.layout = html.Div(
                 html.Div(
                     className="control-group",
                     children=[
-                        dcc.Upload(
-                            id="upload-data",
-                            children=html.Div(
-                                className="upload-label",
-                                children=[
-                                    html.Span("Upload CSV"),
-                                    html.Span(" (drag & drop or click)", className="upload-hint"),
-                                ],
-                            ),
-                            className="upload-area",
-                            accept=".csv",
-                            max_size=50 * 1024 * 1024,
+                        html.Div(
+                            className="import-actions",
+                            children=[
+                                dcc.Upload(
+                                    id="upload-data",
+                                    children=html.Div(
+                                        className="upload-label",
+                                        children=[
+                                            html.Span("Upload CSV"),
+                                            html.Span(" (drag & drop or click)", className="upload-hint"),
+                                        ],
+                                    ),
+                                    className="upload-area",
+                                    accept=".csv",
+                                    max_size=50 * 1024 * 1024,
+                                ),
+                                html.Button(
+                                    "Import to SAP",
+                                    id="import-to-sap-btn",
+                                    className="btn-import-sap",
+                                    n_clicks=0,
+                                ),
+                            ],
                         ),
                         html.Div(id="upload-status", className="upload-status"),
                     ],
@@ -375,6 +387,14 @@ app.layout = html.Div(
                         html.H3("AI Assistant"),
                         html.Span("demo mode", className="chat-mode-badge"),
                     ],
+                ),
+                html.Div(
+                    id="chat-caution-note",
+                    className="chat-caution-note",
+                    children=(
+                        "Be careful with link X ↔ Y: I cannot properly determine "
+                        "if it is correct from the current observational data alone."
+                    ),
                 ),
                 html.Div(id="chat-messages", className="chat-messages"),
                 html.Div(
@@ -616,6 +636,73 @@ def update_visualizations(store_data, constraints, confidence_threshold):
             })
 
     return _timeseries_figure(df), _build_cyto_elements(edges), description
+
+
+@callback(
+    Output("chat-caution-note", "children"),
+    Input("dataset-store", "data"),
+    Input("constraints-store", "data"),
+    Input("confidence-threshold", "value"),
+)
+def update_chat_caution_note(store_data, constraints, confidence_threshold):
+    if not store_data:
+        return (
+            "Be careful with link X ↔ Y: I cannot properly determine "
+            "if it is correct from the current observational data alone."
+        )
+
+    raw_edges = store_data.get("edges", [])
+    if not raw_edges:
+        return (
+            "No links are currently available. Directional certainty will be "
+            "shown once a graph is discovered."
+        )
+
+    threshold = confidence_threshold if confidence_threshold is not None else 0.3
+    forbidden_set = {
+        (e["source"], e["target"]) for e in (constraints or {}).get("forbidden", [])
+    }
+    required_set = {
+        (e["source"], e["target"]) for e in (constraints or {}).get("guaranteed", [])
+    }
+
+    visible_edges = []
+    for edge in raw_edges:
+        key = (edge["source"], edge["target"])
+        if key in forbidden_set:
+            continue
+
+        if key in required_set:
+            ambiguity = None
+        elif edge["weight"] < threshold:
+            ambiguity = "empirical"
+        else:
+            ambiguity = edge.get("ambiguity")
+        visible_edges.append({**edge, "ambiguity": ambiguity})
+
+    structural_edges = [e for e in visible_edges if e.get("ambiguity") == "structural"]
+    if structural_edges:
+        edge = structural_edges[0]
+        return (
+            f"Be careful with link {edge['source']} ↔ {edge['target']}: "
+            "I cannot properly determine if the direction is correct from the current "
+            "observational data alone."
+        )
+
+    empirical_edges = [e for e in visible_edges if e.get("ambiguity") == "empirical"]
+    if empirical_edges:
+        weakest = min(empirical_edges, key=lambda e: e["weight"])
+        return (
+            f"Be careful with link {weakest['source']} → {weakest['target']}: "
+            "confidence is low, so this direction may be unstable."
+        )
+
+    strongest = max(visible_edges, key=lambda e: e["weight"])
+    return (
+        f"Current strongest link is {strongest['source']} → {strongest['target']}. "
+        "Direction looks stable at the current threshold, but always validate "
+        "with domain knowledge or intervention data."
+    )
 
 
 @callback(
